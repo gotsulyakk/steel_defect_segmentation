@@ -1,0 +1,1 @@
+# test_task_steel_defect_detection
