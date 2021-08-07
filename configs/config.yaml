@@ -1,0 +1,65 @@
+---
+experiment_name: "my_first_run"
+
+seed: 42
+num_workers: 0
+
+data:
+  train_images_dir: data/images
+  train_masks_dir: data/masks
+
+  test_images_dir: data/seg_data/images
+  test_masks_dir: data/seg_data/masks
+
+  val_split: 0.1
+
+model:
+  type: segmentation_models_pytorch.Unet
+  encoder_name: resnet18
+  encoder_weights: imagenet
+  classes: 1
+  activation: sigmoid
+
+criterion:
+  type: segmentation_models_pytorch.utils.losses.DiceLoss
+
+metric:
+  type: segmentation_models_pytorch.utils.metrics.IoU
+  threshold: 0.5
+
+trainer:
+  type: pytorch_lightning.Trainer
+  gpus: 1
+  max_epochs: 100
+  progress_bar_refresh_rate: 1
+  benchmark: True
+  precision: 32
+  gradient_clip_val: null
+  stochastic_weight_avg: True
+  #resume_from_checkpoint: lightning_logs/version_5/checkpoints/epoch=30-step=3540.ckpt  
+
+train_parameters:
+  batch_size: 3
+
+val_parameters:
+  batch_size: 1
+
+optimizer:
+  type: torch.optim.Adam
+  lr: 0.0000001
+
+scheduler:
+  type: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts
+  T_0: 10
+  T_mult: 2
+
+checkpoint_callback:
+  type: pytorch_lightning.callbacks.ModelCheckpoint
+  dirpath: checkpoints
+  filename: "best_checkpoint"
+  monitor: valid_metrics
+  verbose: True
+  mode: max
+  save_top_k: -1
+
+#TODO: augmentation config 
