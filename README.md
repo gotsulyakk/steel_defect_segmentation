@@ -37,7 +37,7 @@ You can run demo.py for inference:
 ```sh
 python demo.py --image {PATH/TO/IMAGE} --model_ckpt {PATH/TO/MODEL_CKPT} --config {PATH/TO/CONFIG}
 ```
-Random image from test set:
+Random image from test set: \
 Original image:
 ![Original image](https://github.com/gotsulyakk/test_task_steel_defect_detection/blob/main/data/inference/original.jpg)
 Predicted mask:
