@@ -58,7 +58,7 @@ Ground truth mask:
 5. Use postprocessing techniques such as dillation to improve masks quality
 
 ## Problems
-- Data: in some cases without domain knowledge I couldn't figure out where is a defect on original image without ground truth
+- Data: in some cases without domain knowledge I couldn't figure out without ground truth where is a defect on original image 
 - We cannot just copy-paste kaggle notebooks since requirements of this task differ from requirements of the original competition
 - It was quite interesting (and hard a bit) to figure out how to work with mask encoding in train.csv and how to combine it into one class
 - I'm quite new to pytorch ligthtning so code can contains bugs and the code style may not follow best practices
