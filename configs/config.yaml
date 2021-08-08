@@ -1,21 +1,21 @@
 ---
-experiment_name: "my_first_run"
+experiment_name: "test_task_run"
 
 seed: 42
-num_workers: 0
+num_workers: 8
 
 data:
-  train_images_dir: data/images
-  train_masks_dir: data/masks
+  train_images_dir: data/train/images
+  train_masks_dir: data/train/masks
 
-  test_images_dir: data/seg_data/images
-  test_masks_dir: data/seg_data/masks
+  test_images_dir: data/test/images
+  test_masks_dir: data/test/masks
 
   val_split: 0.1
 
 model:
-  type: segmentation_models_pytorch.Unet
-  encoder_name: resnet18
+  type: segmentation_models_pytorch.FPN
+  encoder_name: resnext50_32x4d
   encoder_weights: imagenet
   classes: 1
   activation: sigmoid
@@ -30,7 +30,7 @@ metric:
 trainer:
   type: pytorch_lightning.Trainer
   gpus: 1
-  max_epochs: 100
+  max_epochs: 30
   progress_bar_refresh_rate: 1
   benchmark: True
   precision: 32
@@ -39,14 +39,14 @@ trainer:
   #resume_from_checkpoint: lightning_logs/version_5/checkpoints/epoch=30-step=3540.ckpt  
 
 train_parameters:
-  batch_size: 3
+  batch_size: 8
 
 val_parameters:
   batch_size: 1
 
 optimizer:
-  type: torch.optim.Adam
-  lr: 0.0000001
+  type: torch.optim.AdamW
+  lr: 0.0001
 
 scheduler:
   type: torch.optim.lr_scheduler.CosineAnnealingWarmRestarts

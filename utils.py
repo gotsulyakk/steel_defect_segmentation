@@ -1,13 +1,15 @@
+import os
 import re
 import pydoc
+import shutil
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional, Union, List
 
 import cv2
 import torch
+import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
-import albumentations as albu
-from albumentations.pytorch import ToTensorV2 as ToTensor
 
 
 def object_from_dict(d, parent=None, **default_kwargs):
@@ -22,7 +24,9 @@ def object_from_dict(d, parent=None, **default_kwargs):
     return pydoc.locate(object_type)(**kwargs)
 
 
-def rename_layers(state_dict: Dict[str, Any], rename_in_layers: Dict[str, Any]) -> Dict[str, Any]:
+def rename_layers(
+    state_dict: Dict[str, Any], rename_in_layers: Dict[str, Any]
+) -> Dict[str, Any]:
     result = {}
     for key, value in state_dict.items():
         for key_r, value_r in rename_in_layers.items():
@@ -31,6 +35,12 @@ def rename_layers(state_dict: Dict[str, Any], rename_in_layers: Dict[str, Any]) 
         result[key] = value
 
     return result
+
+
+def average(outputs: List, name: str) -> torch.Tensor:
+    if len(outputs[0][name].shape) == 0:
+        return torch.stack([x[name] for x in outputs]).mean()
+    return torch.cat([x[name] for x in outputs]).mean()
 
 
 def state_dict_from_disk(
@@ -58,91 +68,57 @@ def state_dict_from_disk(
 
 
 def visualize(**images):
-    """PLot images in one row."""
     n = len(images)
     plt.figure(figsize=(16, 5))
     for i, (name, image) in enumerate(images.items()):
         plt.subplot(1, n, i + 1)
         plt.xticks([])
         plt.yticks([])
-        plt.title(' '.join(name.split('_')).title())
+        plt.title(" ".join(name.split("_")).title())
         plt.imshow(image)
     plt.show()
 
 
-def to_tensor(x, **kwargs):
-    return x.transpose(2, 0, 1).astype('float32')
+def rle2mask(rle: str, height: int = 256, width: int = 1600) -> np.array:
+    rows, cols = height, width
+    rle_nums = [int(numstring) for numstring in rle.split(" ")]
+    rle_pairs = np.array(rle_nums).reshape(-1, 2)
+    img = np.zeros(rows * cols, dtype=np.uint8)
+    for index, length in rle_pairs:
+        index -= 1
+        img[index : index + length] = 255
+    img = img.reshape(cols, rows)
+    img = img.T
+    return img
 
 
-def get_training_aug(preprocessing_fn):
-    train_transform = [
-        
-        albu.Resize(512, 512),
-        albu.HorizontalFlip(p=0.5),
+def combine_masks(row: pd.DataFrame, height: int = 256, width: int = 1600) -> np.array:
+    rle1 = row["1"]
+    rle2 = row["2"]
+    rle3 = row["3"]
+    rle4 = row["4"]
 
-        albu.ShiftScaleRotate(scale_limit=0.5, rotate_limit=0, shift_limit=0.1, p=1, border_mode=0),
+    mask1 = rle2mask(rle1, height, width)
+    mask2 = rle2mask(rle2, height, width)
+    mask3 = rle2mask(rle3, height, width)
+    mask4 = rle2mask(rle4, height, width)
 
-        #albu.PadIfNeeded(min_height=320, min_width=320, always_apply=True, border_mode=0),
-        #albu.RandomCrop(height=128, width=128, always_apply=True),
-
-        albu.GaussNoise(p=0.2),
-        albu.Perspective(p=0.5),
-
-        albu.OneOf(
-            [
-                albu.CLAHE(p=1),
-                albu.RandomBrightness(p=1),
-                albu.RandomGamma(p=1),
-            ],
-            p=0.9,
-        ),
-
-        albu.OneOf(
-            [
-                albu.Sharpen(p=1),
-                albu.Blur(blur_limit=3, p=1),
-                albu.MotionBlur(blur_limit=3, p=1),
-            ],
-            p=0.9,
-        ),
-
-        albu.OneOf(
-            [
-                albu.RandomContrast(p=1),
-                albu.HueSaturationValue(p=1),
-            ],
-            p=0.9,
-        ),
-        albu.Lambda(image=preprocessing_fn),
-        albu.Normalize(),
-        ToTensor(transpose_mask=False),
-    ]
-    return albu.Compose(train_transform)
+    combined = 255 * (mask1 + mask2 + mask3 + mask4)
+    combined = combined.clip(0, 255).astype("uint8")
+    return combined
 
 
-def get_validation_aug(preprocessing_fn):
-    """Add paddings to make image shape divisible by 32"""
-    test_transform = [
-        albu.Resize(512, 512),
-        #albu.PadIfNeeded(384, 480),
-        albu.Lambda(image=preprocessing_fn),
-        albu.Normalize(),
-        ToTensor(transpose_mask=False),
-    ]
-    return albu.Compose(test_transform)
+def save_masks(
+    df: pd.DataFrame, dest_dir: str, height: int = 256, width: int = 1600
+) -> None:
+    for _, row in df.iterrows():
+        fname = row["fname"]
+        combined_mask = combine_masks(row, height, width)
+        cv2.imwrite(os.path.join(dest_dir, fname), 255 * combined_mask)
 
-def get_preprocessing(preprocessing_fn):
-    """Construct preprocessing transform
-    
-    Args:
-        preprocessing_fn (callbale): data normalization function 
-            (can be specific for each pretrained neural network)
-    Return:
-        transform: albumentations.Compose
-    
-    """   
-    _transform = [
-        albu.Lambda(image=preprocessing_fn),
-        albu.Lambda(image=to_tensor, mask=to_tensor),
-    ]
-    return albu.Compose(_transform)
+
+def copy_images(df: pd.DataFrame, source_dir: str, dest_dir: str) -> None:
+    for _, row in df.iterrows():
+        source_fname = os.path.join(source_dir, row["fname"])
+        dest_fname = os.path.join(dest_dir, row["fname"])
+        shutil.copy(source_fname, dest_fname)
