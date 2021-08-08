@@ -55,5 +55,10 @@ There are various technics to improve the model:
 5. Play with image resolution which require more computational power
 5. Find best learning rate
 4. If we don't want to "label" more data we can "pseudolabel" it and use for training 
+5. Use postprocessing techniques such as dillation to improve masks quality
 
 ## Problems
+- Data: in some cases without domain knowledge I couldn't figure out where is a defect on original image without ground truth
+- We cannot just copy-paste kaggle notebooks since requirements of this task differ from requirements of the original competition
+- It was quite interesting (and hard a bit) to figure out how to work with mask encoding in train.csv and how to combine it into one class
+- I'm quite new to pytorch ligthtning so code can contains bugs and the code style may not follow best practices
