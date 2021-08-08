@@ -1,4 +1,5 @@
 # Steel defect detection [test task]
+Aim is to create simple binary segementation pipeline using [pytorch lightning](https://www.pytorchlightning.ai/), [segmentation_models.pytorch](https://github.com/qubvel/segmentation_models.pytorch) and data from [severstal steel defect detection challenge](https://www.kaggle.com/c/severstal-steel-defect-detection/overview)
 
 ## Install
 ```sh
@@ -7,7 +8,6 @@ cd test_task_steel_defect_detection
 
 pip install -r requirements.txt
 ```
-Aim is to create simple binary segementation pipeline using [pytorch lightning](https://www.pytorchlightning.ai/), [segmentation_models.pytorch](https://github.com/qubvel/segmentation_models.pytorch) and data from [severstal steel defect detection challenge](https://www.kaggle.com/c/severstal-steel-defect-detection/overview)
 ## Data
 [Original dataset](https://www.kaggle.com/c/severstal-steel-defect-detection/data) contains both labeled and unlabeled grayscale (ith 3 channels) images with defects (4 classes) and without defects. Goal of this task is to combine 4 classes into 1 and do binary segmentation. 
 
