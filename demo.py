@@ -1,4 +1,5 @@
 import argparse
+import os
 from typing import Dict
 
 import cv2
@@ -9,6 +10,7 @@ import yaml
 from skimage import color, segmentation
 
 import utils
+from dataloaders import get_validation_aug
 
 
 def parse_args():
@@ -49,7 +51,7 @@ def main():
     preprocessing_fn = smp.encoders.get_preprocessing_fn(
         hparams["model"]["encoder_name"], hparams["model"]["encoder_weights"]
     )
-    transform = utils.get_validation_aug(preprocessing_fn)
+    transform = get_validation_aug(preprocessing_fn)
     image_data = transform(image=image)
 
     model.eval()
@@ -79,7 +81,13 @@ def main():
     gt_mask_path = args.image.replace("images", "masks")
     gt_mask = cv2.imread(gt_mask_path, cv2.IMREAD_GRAYSCALE)
 
-    v_result = cv2.vconcat([image, segmentation_result, img_with_mask, img_with_mask])
+    save_dir = "data/inference"
+    os.makedirs(save_dir, exist_ok=True)
+
+    cv2.imwrite(os.path.join(save_dir, "original.jpg"), image)
+    cv2.imwrite(os.path.join(save_dir, "pred_mask.jpg"), 255 * segmentation_result)
+    cv2.imwrite(os.path.join(save_dir, "masked.jpg"), img_with_mask)
+    cv2.imwrite(os.path.join(save_dir, "gt_mask.jpg"), gt_mask)
 
     utils.visualize(
         original_image=image,
@@ -87,7 +95,7 @@ def main():
         # label2rgb=label2rgb,
         # image_with_contour=img_with_contours,
         image_with_mask=img_with_mask,
-        ground_truth_mask_mask=img_with_mask,
+        ground_truth_mask=gt_mask,
     )
 
 
