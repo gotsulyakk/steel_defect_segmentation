@@ -32,6 +32,8 @@ python train.py --config {PATH/TO/CONFIG}
 **Metric**: IoU (threshold=0.5) \
 **Number of epochs**: 30 \
 
+My training config: configs/config.yaml
+
 ## Inference example
 You can run demo.py for inference:
 ```sh
