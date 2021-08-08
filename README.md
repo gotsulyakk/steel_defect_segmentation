@@ -48,7 +48,6 @@ Ground truth mask:
 ![Ground truth mask](https://github.com/gotsulyakk/test_task_steel_defect_detection/blob/main/data/inference/gt_mask.jpg)
 
 ## Further improvements
-There are various technics to improve the model:
 1. The most common - add more data
 2. Try another architecture and/or another backbone
 3. Try another loss function or combine them
