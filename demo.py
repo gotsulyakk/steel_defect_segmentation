@@ -79,13 +79,15 @@ def main():
     gt_mask_path = args.image.replace("images", "masks")
     gt_mask = cv2.imread(gt_mask_path, cv2.IMREAD_GRAYSCALE)
 
+    v_result = cv2.vconcat([image, segmentation_result, img_with_mask, img_with_mask])
+
     utils.visualize(
         original_image=image,
         predicted_mask=segmentation_result,
         # label2rgb=label2rgb,
         # image_with_contour=img_with_contours,
         image_with_mask=img_with_mask,
-        ground_truth_mask_mask=gt_mask,
+        ground_truth_mask_mask=img_with_mask,
     )
 
 
