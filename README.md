@@ -28,8 +28,8 @@ python train.py --config {PATH/TO/CONFIG}
 **Architecture**: I tried Unet and FPN architectures. FPN seems to work slight better (~1%). \
 **Encoder**: resnext50_32x4d was ~2% better than efficientnetb3 in my few runs. \
 **Loss function**: Dice \
-**Opimizer**: AdamW(lr=0.0001)
-**Metric**: IoU(threshold=0.5) \
+**Opimizer**: AdamW (lr=0.0001) \
+**Metric**: IoU (threshold=0.5) \
 **Number of epochs**: 30 \
 
 ## Inference example
