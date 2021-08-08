@@ -41,9 +41,9 @@ Original image:
 ![Original image](https://github.com/gotsulyakk/test_task_steel_defect_detection/blob/main/data/inference/original.jpg)
 Predicted mask:
 ![Predicted mask](https://github.com/gotsulyakk/test_task_steel_defect_detection/blob/main/data/inference/pred_mask.jpg)
-Image with mask overlay
+Image with mask overlay:
 ![Image with mask](https://github.com/gotsulyakk/test_task_steel_defect_detection/blob/main/data/inference/masked.jpg)
-Ground truth mask
+Ground truth mask:
 ![Ground truth mask](https://github.com/gotsulyakk/test_task_steel_defect_detection/blob/main/data/inference/gt_mask.jpg)
 
 ## Further improvements
