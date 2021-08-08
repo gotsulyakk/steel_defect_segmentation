@@ -53,7 +53,7 @@ Ground truth mask:
 3. Try another loss function or combine them
 4. Try another optimizer
 5. Play with image resolution which require more computational power
-5. Find best learning rate
+5. Find the best learning rate
 4. If we don't want to "label" more data we can "pseudolabel" it and use for training 
 5. Use postprocessing techniques such as dillation to improve masks quality
 
