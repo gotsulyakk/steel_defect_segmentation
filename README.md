@@ -30,7 +30,7 @@ python train.py --config {PATH/TO/CONFIG}
 **Loss function**: Dice \
 **Opimizer**: AdamW (lr=0.0001) \
 **Metric**: IoU (threshold=0.5) \
-**Number of epochs**: 30 \
+**Number of epochs**: 30 
 
 My training config: configs/config.yaml
 
@@ -53,7 +53,7 @@ Ground truth mask:
 1. The most common - add more data
 2. Try another architecture and/or another backbone
 3. Try another loss function or combine them
-4. Try another optimizer
+4. Try another optimizer and scheduler
 5. Play with image resolution which require more computational power
 6. Find the best learning rate
 7. If we don't want to "label" more data we can "pseudolabel" it and use for training 
