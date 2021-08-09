@@ -9,7 +9,7 @@ cd test_task_steel_defect_detection
 pip install -r requirements.txt
 ```
 ## Data
-[Original dataset](https://www.kaggle.com/c/severstal-steel-defect-detection/data) contains both labeled and unlabeled grayscale (ith 3 channels) images with defects (4 classes) and without defects. Goal of this task is to combine 4 classes into 1 and do binary segmentation. 
+[Original dataset](https://www.kaggle.com/c/severstal-steel-defect-detection/data) contains both labeled and unlabeled grayscale (with 3 channels) images with defects (4 classes) and without defects. Goal of this task is to combine 4 classes into 1 and do binary segmentation. 
 
 Data prepared with notebooks/data_prep.ipynb
 
@@ -55,9 +55,10 @@ Ground truth mask:
 3. Try another loss function or combine them
 4. Try another optimizer
 5. Play with image resolution which require more computational power
-5. Find the best learning rate
-4. If we don't want to "label" more data we can "pseudolabel" it and use for training 
-5. Use postprocessing techniques such as dillation to improve masks quality
+6. Find the best learning rate
+7. If we don't want to "label" more data we can "pseudolabel" it and use for training 
+8. Use postprocessing techniques such as dillation to improve masks quality
+9. Play with augmentatons. Probably strong color augs are not the best choice.
 
 ## Problems
 - Data: in some cases without domain knowledge I couldn't figure out without ground truth where is a defect on original image 
