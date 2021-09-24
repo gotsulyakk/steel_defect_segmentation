@@ -1,4 +1,4 @@
-# Steel defect detection [test task]
+# Steel defect detection
 Aim is to create simple binary segementation pipeline using [pytorch lightning](https://www.pytorchlightning.ai/), [segmentation_models.pytorch](https://github.com/qubvel/segmentation_models.pytorch) and data from [severstal steel defect detection challenge](https://www.kaggle.com/c/severstal-steel-defect-detection/overview)
 
 ## Install
@@ -59,9 +59,3 @@ Ground truth mask:
 7. If we don't want to "label" more data we can "pseudolabel" it and use for training 
 8. Use postprocessing techniques such as dillation to improve masks quality
 9. Play with augmentatons. Probably strong color augs are not the best choice.
-
-## Problems
-- Data: in some cases without domain knowledge I couldn't figure out without ground truth where is a defect on original image 
-- We cannot just copy-paste kaggle notebooks since requirements of this task differ from requirements of the original competition
-- It was quite interesting (and hard a bit) to figure out how to work with mask encoding in train.csv and how to combine it into one class
-- I'm quite new to pytorch ligthtning so code can contains bugs and the code style may not follow best practices
