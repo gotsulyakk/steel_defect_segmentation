@@ -3,7 +3,7 @@ Aim is to create simple binary segementation pipeline using [pytorch lightning](
 
 ## Install
 ```sh
-git clone https://github.com/gotsulyakk/test_task_steel_defect_detection.git
+git clone https://github.com/gotsulyakk/steel_defect_detection.git
 cd test_task_steel_defect_detection
 
 pip install -r requirements.txt
